@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthorizedController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FollowerController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,13 +46,25 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/me/applications', [AuthorizedController::class, 'applications']);
     Route::get('/me/genres', [AuthorizedController::class, 'genres']);
     Route::get('/me/rejected', [AuthorizedController::class, 'rejected']);
+    Route::get('/me/hosted-groups', [AuthorizedController::class, 'hosted_groups']);
 
+    Route::get('/followers', [FollowerController::class, 'followers']);
+    Route::get('/followed', [FollowerController::class, 'followed']);
+    Route::get('/followed/groups', [FollowerController::class, 'followedGroups']);
+    Route::post('/users/{user}/follow', [FollowerController::class, 'followUser']);
+    Route::post('/users/{user}/unfollow', [FollowerController::class, 'unfollowUser']);
+
+    Route::post('/groups', [GroupController::class, 'store']);
     Route::post('/groups/{group}/apply', [GroupController::class, 'apply']);
 
 
 });
 
+Route::get('/users/{user}/followers', [FollowerController::class, 'followersOfUser']);
+Route::get('/users/{user}/followed', [FollowerController::class, 'followedOfUser']);
+
 Route::resource('/users', UserController::class);
 Route::resource('/games', GameController::class);
-Route::resource('/groups', GroupController::class);
+Route::get('/groups', [GroupController::class, 'index']);
+Route::get('/groups/{group}', [GroupController::class, 'show']);
 

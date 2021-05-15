@@ -6,6 +6,7 @@ use App\Models\Game;
 use App\Models\Group;
 use App\Models\Location;
 use App\Models\User;
+use App\Requests\Groups\CreateGroupRequest;
 use App\Transformers\ApplicationTransformer;
 use App\Transformers\BaseTransformer;
 use App\Transformers\GameTransformer;
@@ -17,6 +18,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Storage;
 
 class GroupController extends BaseController
 {
@@ -57,6 +59,15 @@ class GroupController extends BaseController
         return fractal()->item($group->location, new LocationTransformer());
     }
 
+    public function store(CreateGroupRequest $request) {
+        $validated = $request->validated();
+        if($validated['image']) {
+            $validated['image'] = 'storage/' . Storage::disk('public')->put('groups', $validated['image']);
+        }
+        $validated['host_id'] = auth()->user()->id;
+        $group = Group::create($validated);
+        return fractal()->item($group, new GroupTransformer())->parseIncludes(['host', 'applicants', 'rejected', 'players', 'games']);
+    }
 
     public function apply(Group $group, Request $request) {
         $group->applications()->syncWithoutDetaching([

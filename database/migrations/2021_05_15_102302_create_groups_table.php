@@ -30,7 +30,7 @@ class CreateGroupsTable extends Migration
                 ->references('id')
                 ->on('users');
 
-            $table->bigInteger('location_id')->unsigned();
+            $table->bigInteger('location_id')->unsigned()->nullable();
 
             $table->foreign('location_id')
                 ->references('id')

@@ -18,9 +18,10 @@ class UserTransformer extends BaseTransformer
 
         return [
             'id' => $resource->id,
-
             'email' => $resource->email,
             'name' => $resource->name,
+            'followers' => $resource->followers()->count(),
+            'followed' => $resource->followed()->count(),
         ];
     }
 

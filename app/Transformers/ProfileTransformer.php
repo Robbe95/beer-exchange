@@ -17,6 +17,10 @@ class ProfileTransformer extends BaseTransformer
 
     public function transform(Profile $resource) {
 
-        return [];
+        return [
+            'id' => $resource->id,
+            'bio' => $resource->bio,
+            'picture' => $resource->picture,
+        ];
     }
 }

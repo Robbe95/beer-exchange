@@ -17,11 +17,19 @@ class GroupTransformer extends BaseTransformer
     }
 
     public function transform(Group $resource) {
-        return [
+        $return = [
+            'id' => $resource->id,
             'title' => $resource->title,
-            'players_amount' => $resource->players()->count() + 1
+            'players_amount' => $resource->players()->count() + 1,
+            'information' => $resource->information,
+            'start_time' => $resource->start_time->timestamp,
+            'image' => $resource->image ? env('APP_URL') . $resource->image : null,
 
         ];
+        if(optional(auth()->guard('api')->user())->isPlayer($resource)) {
+            $return['private_information'] = $resource->private_information;
+        }
+        return $return;
     }
 
     public function includeHost(Group $resource) {

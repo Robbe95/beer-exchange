@@ -18,6 +18,7 @@ class GenreTransformer extends BaseTransformer
 
     public function transform(Genre $resource) {
         return [
+            'id' => $resource->id,
             'title' => $resource->title
         ];
     }

@@ -44,8 +44,9 @@ class User extends Authenticatable
     ];
 
     public function profile() {
-        return $this->belongsTo(Profile::class);
+        return $this->hasOne(Profile::class);
     }
+
     public function groups() {
         return $this->belongsToMany(Group::class, 'applications', 'user_id', 'group_id')
             ->withTimestamps()
@@ -89,8 +90,20 @@ class User extends Authenticatable
         return $this->belongsToMany(Game::class, 'game_user', 'user_id', 'game_id');
     }
 
+    public function followers() {
+        return $this->belongsToMany(User::class, 'followed_users', 'followed_id', 'follower_id');
+    }
+
+    public function followed() {
+        return $this->belongsToMany(User::class, 'followed_users', 'follower_id', 'followed_id');
+    }
+
     public function hosted_groups() {
         return $this->hasMany(Group::class, 'host_id');
+    }
+
+    public function getGroupsOfFollowedAttribute() {
+        return Group::whereIn('host_id', $this->followed()->pluck('followed_id'))->get();;
     }
 
     //Functionality

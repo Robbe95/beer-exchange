@@ -19,7 +19,7 @@ class AuthorizedController extends BaseController
 {
     public function me() {
         return fractal()->item(auth()->user(), new UserTransformer())
-            ->parseIncludes(['games', 'groups', 'applications', 'genres']);
+            ->parseIncludes(['games', 'groups', 'applications', 'genres', 'hosted_groups']);
     }
 
     public function games() {
@@ -40,5 +40,9 @@ class AuthorizedController extends BaseController
 
     public function genres() {
         return fractal()->collection(auth()->user()->genres, new GenreTransformer());
+    }
+
+    public function hosted_groups() {
+        return fractal()->collection(auth()->user()->hosted_groups, new GroupTransformer());
     }
 }

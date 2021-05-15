@@ -12,10 +12,12 @@ class Group extends Model
     protected $fillable = [
         'id',
         'title',
-        'description',
         'image',
         'public',
-        'host_id'
+        'host_id',
+        'information',
+        'private_information',
+        'start_time'
 
     ];
 

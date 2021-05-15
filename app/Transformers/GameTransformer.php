@@ -18,6 +18,7 @@ class GameTransformer extends BaseTransformer
     public function transform(Game $resource) {
 
         return [
+            'id' => $resource->id,
             'title' => $resource->title,
             'description' => $resource->title,
             'image' => $resource->image

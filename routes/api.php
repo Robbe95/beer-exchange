@@ -5,6 +5,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\VoteController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,9 +36,15 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['middleware' => ['is.player']], function () {
         Route::get('/groups/{group}/games', [GroupController::class, 'games']);
+        Route::get('/groups/{group}/games-with-votes', [GroupController::class, 'gamesWithVotes']);
+
         Route::get('/groups/{group}/players', [GroupController::class, 'players']);
         Route::get('/groups/{group}/host', [GroupController::class, 'host']);
         Route::get('/groups/{group}/location', [GroupController::class, 'location']);
+
+        Route::post('/groups/{group}/games/{game}/vote', [VoteController::class, 'voteGame']);
+        Route::post('/groups/{group}/genres/{genre}/vote', [VoteController::class, 'voteGenre']);
+
     });
 
     Route::get('/me', [AuthorizedController::class, 'me']);
@@ -56,6 +63,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/groups', [GroupController::class, 'store']);
     Route::post('/groups/{group}/apply', [GroupController::class, 'apply']);
+    Route::get('/groups/{group}/game-votes', [VoteController::class, 'getVoteGames']);
+    Route::get('/groups/{group}/genre-votes', [VoteController::class, 'getVoteGenres']);
 
 
 });

@@ -17,12 +17,17 @@ class GameTransformer extends BaseTransformer
 
     public function transform(Game $resource) {
 
-        return [
+        $return = [
             'id' => $resource->id,
             'title' => $resource->title,
             'description' => $resource->title,
-            'image' => $resource->image
+            'image' => $resource->image,
+
         ];
+        if($resource->votes) {
+            $return['votes'] = $resource->votes;
+        }
+        return $return;
     }
 
     public function includeGenres(Game $resource) {

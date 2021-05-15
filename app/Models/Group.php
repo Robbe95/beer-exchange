@@ -55,8 +55,12 @@ class Group extends Model
             ->where('status', 'rejected');
     }
 
-    public function votes() {
+    public function gameVotes() {
         return $this->hasMany(GameVote::class);
+    }
+
+    public function genreVotes() {
+        return $this->hasMany(GenreVote::class);
     }
 
 
@@ -68,6 +72,23 @@ class Group extends Model
         }
         return $gameCollection->unique();
     }
+
+    public function getGamesWithVotesAttribute() {
+        $gameVotes = $this->gameVotes;
+        $genreVotes = $this->genreVotes;
+
+        $gameCollection = $this->host->games;
+        foreach($this->players as $player) {
+            $gameCollection = $gameCollection->merge($player->games);
+        }
+        foreach($gameCollection as &$game) {
+            $game->votes = 0;
+            $game->votes += $gameVotes->filter(function ($e) use ($game) { return $e->game_id === $game->id;})->count();
+            $game->votes += $genreVotes->filter(function ($e) use ($game) { return $game->genres()->pluck('genres.id')->contains($e->genre_id); })->count();
+        }
+        return $gameCollection->unique()->sortByDesc('votes');
+    }
+
 
     //SCOPES
     public function scopePublic($query)

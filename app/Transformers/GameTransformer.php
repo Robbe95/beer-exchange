@@ -20,7 +20,7 @@ class GameTransformer extends BaseTransformer
         $return = [
             'id' => $resource->id,
             'title' => $resource->title,
-            'description' => $resource->title,
+            'description' => $resource->description,
             'image' => $resource->image,
             'thumbnail' => $resource->thumbnail ?? null,
 

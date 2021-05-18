@@ -7,17 +7,38 @@ use App\Transformers\GameTransformer;
 use App\Transformers\GenreTransformer;
 use App\Transformers\GroupTransformer;
 use App\Transformers\UserTransformer;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class AuthorizedController extends BaseController
 {
     public function me() {
         return fractal()->item(auth()->user(), new UserTransformer())
-            ->parseIncludes(['games', 'groups', 'applications', 'genres', 'hosted_groups']);
+            ->parseIncludes(['groups', 'applications', 'genres', 'hosted_groups']);
     }
 
-    public function games() {
-        return fractal()->collection(auth()->user()->games, new GameTransformer());
+    public function games(Request $request) {
+        $search = $request->search;
+        $genres = $request->genres;
+        $mechanics = $request->mechanics;
+        $players_amount = $request->players_amount;
+        $age = $request->age;
+        $year_published = $request->year_published;
+        $play_time = $request->play_time;
+
+        $game = auth()->user()->games()
+            ->with('genres')
+            ->with('mechanics')
+            ->applyFilters(
+                search: $search,
+                genres: $genres,
+                mechanics: $mechanics,
+                players_amount: $players_amount,
+                age: $age,
+                year_published: $year_published,
+                play_time: $play_time
+            );
+        return fractal()->paginate($game, new GameTransformer());
     }
 
     public function groups() {

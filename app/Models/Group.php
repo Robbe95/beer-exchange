@@ -63,6 +63,10 @@ class Group extends Model
         return $this->hasMany(GenreVote::class);
     }
 
+    public function mechanicVotes() {
+        return $this->hasMany(MechanicVote::class);
+    }
+
 
     //ATTRIBUTES
     public function getGamesAttribute() {
@@ -76,6 +80,7 @@ class Group extends Model
     public function getGamesWithVotesAttribute() {
         $gameVotes = $this->gameVotes;
         $genreVotes = $this->genreVotes;
+        $mechanicVotes = $this->mechanicVotes;
 
         $gameCollection = $this->host->games;
         foreach($this->players as $player) {
@@ -85,6 +90,7 @@ class Group extends Model
             $game->votes = 0;
             $game->votes += $gameVotes->filter(function ($e) use ($game) { return $e->game_id === $game->id;})->count();
             $game->votes += $genreVotes->filter(function ($e) use ($game) { return $game->genres()->pluck('genres.id')->contains($e->genre_id); })->count();
+            $game->votes += $mechanicVotes->filter(function ($e) use ($game) { return $game->mechanics()->pluck('mechanics.id')->contains($e->mechanic_id); })->count();
         }
         return $gameCollection->unique()->sortByDesc('votes');
     }

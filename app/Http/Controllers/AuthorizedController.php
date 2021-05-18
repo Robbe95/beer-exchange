@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Transformers\ApplicationTransformer;
 use App\Transformers\BaseTransformer;
 use App\Transformers\GameTransformer;
 use App\Transformers\GenreTransformer;
 use App\Transformers\GroupTransformer;
 use App\Transformers\UserTransformer;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class AuthorizedController extends BaseController

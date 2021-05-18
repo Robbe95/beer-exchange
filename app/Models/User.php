@@ -86,6 +86,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Genre::class, 'genre_user', 'user_id', 'genre_id');
     }
 
+    public function mechanics() {
+        return $this->belongsToMany(Mechanic::class, 'mechanic_user', 'user_id', 'mechanic_id');
+    }
+
     public function games() {
         return $this->belongsToMany(Game::class, 'game_user', 'user_id', 'game_id');
     }

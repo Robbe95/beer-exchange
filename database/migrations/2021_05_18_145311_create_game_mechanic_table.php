@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGenreUserTable extends Migration
+class CreateGameMechanicTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,22 @@ class CreateGenreUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('genre_user', function (Blueprint $table) {
+        Schema::create('game_mechanic', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('game_id')->unsigned();
 
-            $table->foreign('user_id')
+            $table->foreign('game_id')
                 ->references('id')
-                ->on('users')
+                ->on('games')
                 ->onDelete('cascade');
 
-            $table->bigInteger('genre_id')->unsigned();
+            $table->bigInteger('mechanic_id')->unsigned();
 
-            $table->foreign('genre_id')
+            $table->foreign('mechanic_id')
                 ->references('id')
-                ->on('genres')
+                ->on('mechanics')
                 ->onDelete('cascade');
 
         });
@@ -41,6 +41,6 @@ class CreateGenreUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('genre_user');
+        Schema::dropIfExists('game_mechanic');
     }
 }

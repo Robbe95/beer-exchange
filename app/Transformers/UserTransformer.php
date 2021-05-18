@@ -8,7 +8,7 @@ class UserTransformer extends BaseTransformer
 {
 
     protected $defaultIncludes = ['profile'];
-    protected $availableIncludes = ['games', 'genres', 'applications', 'groups', 'hosted_groups'];
+    protected $availableIncludes = ['games', 'genres', 'applications', 'groups', 'hosted_groups', 'mechanics'];
 
     public function __construct() {
 
@@ -35,6 +35,10 @@ class UserTransformer extends BaseTransformer
 
     public function includeGenres(User $resource) {
         return $this->collection($resource->genres, new GenreTransformer());
+    }
+
+    public function includeMechanics(User $resource) {
+        return $this->collection($resource->mechanics(), new MechanicTransformer());
     }
 
     public function includeGroups(User $resource) {

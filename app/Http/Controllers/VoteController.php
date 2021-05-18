@@ -7,6 +7,8 @@ use App\Models\GameVote;
 use App\Models\Genre;
 use App\Models\GenreVote;
 use App\Models\Group;
+use App\Models\Mechanic;
+use App\Models\MechanicVote;
 use App\Models\User;
 use App\Transformers\ApplicationTransformer;
 use App\Transformers\BaseTransformer;
@@ -14,6 +16,7 @@ use App\Transformers\GameTransformer;
 use App\Transformers\GameVoteTransformer;
 use App\Transformers\GenreVoteTransformer;
 use App\Transformers\GroupTransformer;
+use App\Transformers\MechanicVoteTransformer;
 use App\Transformers\UserTransformer;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -46,6 +49,17 @@ class VoteController extends BaseController
         return $vote;
     }
 
+    public function voteMechanic(Group $group, Mechanic $mechanic) {
+        $vote = MechanicVote::firstOrCreate(
+            [
+                'user_id' => auth()->user()->id,
+                'group_id' => $group->id,
+                'mechanic_id' => $mechanic->id,
+            ]
+        );
+        return $vote;
+    }
+
     public function undoVoteGame() {
         return fractal()->collection(auth()->user()->groups, new GroupTransformer());
     }
@@ -60,5 +74,9 @@ class VoteController extends BaseController
 
     public function getVoteGenres(Group $group) {
         return fractal()->collection($group->genreVotes, new GenreVoteTransformer());
+    }
+
+    public function getVoteMechanics(Group $group) {
+        return fractal()->collection($group->mechanicVotes, new MechanicVoteTransformer());
     }
 }

@@ -21,13 +21,15 @@ class CreateGameUserTable extends Migration
 
             $table->foreign('game_id')
                 ->references('id')
-                ->on('games');
+                ->on('games')
+                ->onDelete('cascade');
 
             $table->bigInteger('user_id')->unsigned();
 
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
         });
     }

@@ -21,13 +21,15 @@ class CreateFollowedUsersTable extends Migration
 
             $table->foreign('follower_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
             $table->bigInteger('followed_id')->unsigned();
 
             $table->foreign('followed_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
         });
     }

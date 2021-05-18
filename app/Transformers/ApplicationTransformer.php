@@ -13,7 +13,6 @@ class ApplicationTransformer extends BaseTransformer
     protected $availableIncludes = ['user', 'group'];
 
     public function __construct() {
-
     }
 
     public function transform(Application $resource) {

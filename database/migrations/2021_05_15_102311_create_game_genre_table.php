@@ -21,13 +21,15 @@ class CreateGameGenreTable extends Migration
 
             $table->foreign('game_id')
                 ->references('id')
-                ->on('games');
+                ->on('games')
+                ->onDelete('cascade');
 
             $table->bigInteger('genre_id')->unsigned();
 
             $table->foreign('genre_id')
                 ->references('id')
-                ->on('genres');
+                ->on('genres')
+                ->onDelete('cascade');
 
         });
     }

@@ -43,7 +43,6 @@ class GroupController extends BaseController
         return fractal()->collection($group->gamesWithVotes, new GameTransformer());
     }
 
-
     public function players(Group $group) {
         return fractal()->collection($group->players, new UserTransformer());
     }

@@ -25,15 +25,18 @@ class CreateGameVotesTable extends Migration
 
             $table->foreign('game_id')
                 ->references('id')
-                ->on('games');
+                ->on('games')
+                ->onDelete('cascade');
 
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
             $table->foreign('group_id')
                 ->references('id')
-                ->on('groups');
+                ->on('groups')
+                ->onDelete('cascade');
         });
     }
 

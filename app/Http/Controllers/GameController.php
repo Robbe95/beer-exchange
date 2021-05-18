@@ -19,7 +19,7 @@ class GameController extends BaseController
 {
 
     public function index() {
-        return fractal()->collection(Game::public()->get(), new GameTransformer());
+        return fractal()->paginate(Game::public(), new GameTransformer());
     }
 
     public function games() {
@@ -27,7 +27,6 @@ class GameController extends BaseController
     }
 
     public function groups() {
-        dd(auth()->user()->groups);
         return fractal()->collection(auth()->user()->groups, new GroupTransformer());
     }
 

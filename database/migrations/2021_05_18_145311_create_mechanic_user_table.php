@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGenreUserTable extends Migration
+class CreateMechanicUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateGenreUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('genre_user', function (Blueprint $table) {
+        Schema::create('mechanic_user', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
@@ -24,11 +24,11 @@ class CreateGenreUserTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->bigInteger('genre_id')->unsigned();
+            $table->bigInteger('mechanic_id')->unsigned();
 
-            $table->foreign('genre_id')
+            $table->foreign('mechanic_id')
                 ->references('id')
-                ->on('genres')
+                ->on('mechanics')
                 ->onDelete('cascade');
 
         });
@@ -41,6 +41,6 @@ class CreateGenreUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('genre_user');
+        Schema::dropIfExists('mechanic_user');
     }
 }

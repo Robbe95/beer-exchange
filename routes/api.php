@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::post('/groups/{group}/games/{game}/vote', [VoteController::class, 'voteGame']);
         Route::post('/groups/{group}/genres/{genre}/vote', [VoteController::class, 'voteGenre']);
+        Route::post('/groups/{group}/mechanics/{mechanic}/vote', [VoteController::class, 'voteMechanic']);
 
     });
 
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/groups/{group}/apply', [GroupController::class, 'apply']);
     Route::get('/groups/{group}/game-votes', [VoteController::class, 'getVoteGames']);
     Route::get('/groups/{group}/genre-votes', [VoteController::class, 'getVoteGenres']);
+    Route::get('/groups/{group}/mechanic-votes', [VoteController::class, 'getVoteMechanics']);
 
 
 });

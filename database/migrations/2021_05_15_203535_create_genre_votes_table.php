@@ -23,15 +23,18 @@ class CreateGenreVotesTable extends Migration
 
             $table->foreign('genre_id')
                 ->references('id')
-                ->on('genres');
+                ->on('genres')
+                ->onDelete('cascade');
 
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
             $table->foreign('group_id')
                 ->references('id')
-                ->on('groups');
+                ->on('groups')
+                ->onDelete('cascade');
 
         });
     }

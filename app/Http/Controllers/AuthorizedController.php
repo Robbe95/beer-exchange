@@ -66,7 +66,8 @@ class AuthorizedController extends BaseController
     }
 
     public function groups() {
-        return fractal()->collection(auth()->user()->hosted_groups, new GroupTransformer());
+        $allGroups = auth()->user()->groups->merge(auth()->user()->hosted_groups);
+        return fractal()->collection($allGroups, new GroupTransformer());
     }
 
     public function applications() {

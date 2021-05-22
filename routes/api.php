@@ -71,6 +71,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/users/{user}/unfollow', [FollowerController::class, 'unfollowUser']);
 
     Route::post('/groups', [GroupController::class, 'store']);
+    Route::get('/groups/{group}/possible-games', [GroupController::class, 'getPossibleGames']);
+
     Route::post('/groups/{group}/apply', [GroupController::class, 'apply']);
     Route::get('/groups/{group}/game-votes', [VoteController::class, 'getVoteGames']);
     Route::get('/groups/{group}/genre-votes', [VoteController::class, 'getVoteGenres']);
@@ -86,6 +88,8 @@ Route::get('/users/{user}/followers', [FollowerController::class, 'followersOfUs
 Route::get('/users/{user}/followed', [FollowerController::class, 'followedOfUser']);
 
 Route::resource('/users', UserController::class);
+Route::post('/register', [UserController::class, 'store']);
+
 Route::resource('/games', GameController::class);
 Route::get('/groups', [GroupController::class, 'index']);
 Route::get('/groups/{group}', [GroupController::class, 'show']);

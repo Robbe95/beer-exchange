@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\GameFilterHelper;
 use App\Models\Game;
 use App\Models\Group;
 use App\Models\Location;
@@ -18,6 +19,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GroupController extends BaseController
@@ -65,7 +69,7 @@ class GroupController extends BaseController
 
     public function store(CreateGroupRequest $request) {
         $validated = $request->validated();
-        if($validated['image']) {
+        if(isset($validated['image'])) {
             $validated['image'] = 'storage/' . Storage::disk('public')->put('groups', $validated['image']);
         }
         $validated['host_id'] = auth()->user()->id;
@@ -107,5 +111,49 @@ class GroupController extends BaseController
             ]
         );
         return fractal()->item($group, new GroupTransformer())->parseIncludes(['host', 'applicants', 'rejected', 'players', 'games']);
+    }
+
+    public function getPossibleGames(Group $group, Request $request) {
+        $search = $request->q;
+        $genres = $request->genres;
+        $mechanics = $request->mechanics;
+        $players_amount = $request->players_amount;
+        $age = $request->age;
+        $year_published = $request->year_published;
+        $play_time = $request->play_time;
+
+
+
+        $gameCollection = $group->host->games()->with('genres')->with('mechanics')->get();
+        foreach($group->players as $player) {
+            $gameCollection = $gameCollection->merge($player->games);
+        }
+        $gameCollection = $gameCollection->unique();
+        $favoriteGames = $group->host->favoriteGames()->with('genres')->with('mechanics')->get();;
+        foreach($group->players as $player) {
+            $favoriteGames = $favoriteGames->merge($player->favoriteGames);
+        }
+        $favoriteGames = $favoriteGames->unique();
+
+        $totalGames = $gameCollection->merge($favoriteGames);
+        $preferredGames = collect();
+        foreach($totalGames as $game) {
+            $game->favorite = $favoriteGames->find($game->id) ? 1 : 0;
+            $game->owned = $gameCollection->find($game->id) ? 1 : 0;
+            $preferredGames->push($game);
+        }
+        $preferredGames = GameFilterHelper::filter(
+                $preferredGames,
+                search: $search,
+                genres: $genres,
+                mechanics: $mechanics,
+                players_amount: $players_amount,
+                age: $age,
+                year_published: $year_published,
+                play_time: $play_time
+            );
+        if($request->order_by) $request->order_ascending ? $preferredGames->orderByAsc($request->order_by) : $preferredGames->orderBy($request->order_by);
+
+        return response()->json(['preferred_games' => $preferredGames]);
     }
 }

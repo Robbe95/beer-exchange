@@ -22,7 +22,7 @@ class GroupTransformer extends BaseTransformer
             'title' => $resource->title,
             'players_amount' => $resource->players()->count() + 1,
             'information' => $resource->information,
-            'start_time' => $resource->start_time->timestamp,
+            'start_time' => optional($resource->start_time)->timestamp,
             'image' => $resource->image ? env('APP_URL') . $resource->image : null,
 
         ];

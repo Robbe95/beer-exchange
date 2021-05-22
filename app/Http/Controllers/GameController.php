@@ -23,7 +23,7 @@ class GameController extends BaseController
 
     public function index(Request $request) {
 
-        $search = $request->search;
+        $search = $request->q;
         $genres = $request->genres;
         $mechanics = $request->mechanics;
         $players_amount = $request->players_amount;
@@ -53,7 +53,7 @@ class GameController extends BaseController
 
     public function games(Request $request) {
 
-        $search = $request->search;
+        $search = $request->q;
         $genres = $request->genres;
         $mechanics = $request->mechanics;
         $players_amount = $request->players_amount;
@@ -105,13 +105,14 @@ class GameController extends BaseController
     }
 
     public function favoriteGame(Game $game) {
-        auth()->user()->games()->syncWithoutDetaching([$game->id, ['type' => 'favorite']]);
+        if(!auth()->user()->games()->where('type', 'favorite')->exists($game->id))
+            auth()->user()->games()->attach($game->id, ['type' => 'favorite']);
         return fractal()->item($game, new GameTransformer());
     }
 
     public function ownGame(Game $game) {
-        auth()->user()->games()->attach($game->id, ['type' => 'owned']);
-        dd('test');
+        if(!auth()->user()->games()->where('type', 'owned')->exists($game->id))
+            auth()->user()->games()->attach($game->id, ['type' => 'owned']);
         return fractal()->item($game, new GameTransformer());
     }
 

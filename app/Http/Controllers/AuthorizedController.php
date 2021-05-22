@@ -18,7 +18,7 @@ class AuthorizedController extends BaseController
     }
 
     public function games(Request $request) {
-        $search = $request->search;
+        $search = $request->q;
         $genres = $request->genres;
         $mechanics = $request->mechanics;
         $players_amount = $request->players_amount;
@@ -27,6 +27,30 @@ class AuthorizedController extends BaseController
         $play_time = $request->play_time;
 
         $game = auth()->user()->games()
+            ->with('genres')
+            ->with('mechanics')
+            ->applyFilters(
+                search: $search,
+                genres: $genres,
+                mechanics: $mechanics,
+                players_amount: $players_amount,
+                age: $age,
+                year_published: $year_published,
+                play_time: $play_time
+            );
+        return fractal()->paginate($game, new GameTransformer());
+    }
+
+    public function favoriteGames(Request $request) {
+        $search = $request->q;
+        $genres = $request->genres;
+        $mechanics = $request->mechanics;
+        $players_amount = $request->players_amount;
+        $age = $request->age;
+        $year_published = $request->year_published;
+        $play_time = $request->play_time;
+
+        $game = auth()->user()->favoriteGames()
             ->with('genres')
             ->with('mechanics')
             ->applyFilters(

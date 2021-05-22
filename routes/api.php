@@ -55,6 +55,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/me', [AuthorizedController::class, 'me']);
     Route::get('/me/games', [AuthorizedController::class, 'games']);
+    Route::get('/me/favorite-games', [AuthorizedController::class, 'favoriteGames']);
+
     Route::get('/me/groups', [AuthorizedController::class, 'groups']);
     Route::get('/me/applications', [AuthorizedController::class, 'applications']);
     Route::get('/me/genres', [AuthorizedController::class, 'genres']);

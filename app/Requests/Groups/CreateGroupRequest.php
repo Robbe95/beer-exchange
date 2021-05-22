@@ -27,7 +27,7 @@ class CreateGroupRequest extends FormRequest
             'title' => 'required|string',
             'information' => 'string',
             'private_information' => 'string',
-            'start_time' => 'integer',
+            'start_time' => 'numeric',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ];

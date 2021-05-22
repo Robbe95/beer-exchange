@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\AuthorizedController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\MechanicController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\VoteController;
@@ -46,6 +49,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('/groups/{group}/genres/{genre}/vote', [VoteController::class, 'voteGenre']);
         Route::post('/groups/{group}/mechanics/{mechanic}/vote', [VoteController::class, 'voteMechanic']);
 
+        Route::post('/groups/{group}/message', [MessageController::class, 'broadcast']);
+
     });
 
     Route::get('/me', [AuthorizedController::class, 'me']);
@@ -55,6 +60,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/me/genres', [AuthorizedController::class, 'genres']);
     Route::get('/me/rejected', [AuthorizedController::class, 'rejected']);
     Route::get('/me/hosted-groups', [AuthorizedController::class, 'hosted_groups']);
+    Route::post('/me/games', [GameController::class, 'addCustomGame']);
 
     Route::get('/followers', [FollowerController::class, 'followers']);
     Route::get('/followed', [FollowerController::class, 'followed']);
@@ -68,7 +74,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/groups/{group}/genre-votes', [VoteController::class, 'getVoteGenres']);
     Route::get('/groups/{group}/mechanic-votes', [VoteController::class, 'getVoteMechanics']);
 
-
+    Route::post('/user/mechanics/{mechanic}', [MechanicController::class, 'addMechanicToUser']);
+    Route::post('/user/genres/{genre}', [GenreController::class, 'addGenreToUser']);
+    Route::post('/me/games/{game}/own', [GameController::class, 'ownGame']);
+    Route::post('/me/games/{game}/favorite', [GameController::class, 'favoriteGame']);
 });
 
 Route::get('/users/{user}/followers', [FollowerController::class, 'followersOfUser']);
@@ -78,4 +87,6 @@ Route::resource('/users', UserController::class);
 Route::resource('/games', GameController::class);
 Route::get('/groups', [GroupController::class, 'index']);
 Route::get('/groups/{group}', [GroupController::class, 'show']);
+Route::get('/genres', [GenreController::class, 'index']);
+Route::get('/mechanics', [MechanicController::class, 'index']);
 

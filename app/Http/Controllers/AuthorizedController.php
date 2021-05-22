@@ -60,4 +60,17 @@ class AuthorizedController extends BaseController
     public function hosted_groups() {
         return fractal()->collection(auth()->user()->hosted_groups, new GroupTransformer());
     }
+
+    public function addGenre() {
+        return fractal()->collection(auth()->user()->genres, new GenreTransformer());
+    }
+
+    public function addGame() {
+        return fractal()->collection(auth()->user()->genres, new GenreTransformer());
+    }
+
+    public function addMechanic() {
+        return fractal()->collection(auth()->user()->genres, new GenreTransformer());
+    }
+
 }

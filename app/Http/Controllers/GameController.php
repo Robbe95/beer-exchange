@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\User;
+use App\Requests\Games\CreateCustomGameRequest;
 use App\Transformers\ApplicationTransformer;
 use App\Transformers\BaseTransformer;
 use App\Transformers\GameTransformer;
+use App\Transformers\GenreTransformer;
 use App\Transformers\GroupTransformer;
 use App\Transformers\UserTransformer;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -14,6 +16,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends BaseController
 {
@@ -40,6 +43,11 @@ class GameController extends BaseController
                 year_published: $year_published,
                 play_time: $play_time
             );
+        if($request->order_by) {
+            $game->whereNotNull($request->order_by);
+            $request->order_descending ? $game->orderBy($request->order_by,'desc') : $game->orderBy($request->order_by, 'asc');
+        }
+
         return fractal()->paginate($game, new GameTransformer());
     }
 
@@ -65,6 +73,7 @@ class GameController extends BaseController
                 year_published: $year_published,
                 play_time: $play_time
             );
+        if($request->order_by) $request->order_ascending ? $game->orderByAsc($request->order_by) : $game->orderBy($request->order_by);
         return fractal()->paginate($game, new GameTransformer());
     }
 
@@ -77,6 +86,33 @@ class GameController extends BaseController
     }
 
     public function genres() {
-        return fractal()->collection(auth()->user()->genres, new ApplicationTransformer());
+        return fractal()->collection(auth()->user()->genres, new GenreTransformer());
     }
+
+    public function addCustomGame(CreateCustomGameRequest $request) {
+        $validated = $request->validated();
+        $validated['public'] = false;
+        if($validated['image']) {
+            $validated['image'] = 'storage/' . Storage::disk('public')->put('games/images', $validated['image']);
+        }
+        if($validated['thumbnail']) {
+            $validated['thumbnail'] = 'storage/' . Storage::disk('public')->put('games/thumbnails', $validated['thumbnail']);
+        }
+
+        $game = Game::create($validated);
+        auth()->user()->games()->syncWithoutDetaching([$game->id, ['type' => 'owned']]);
+        return fractal()->item($game, new GameTransformer());
+    }
+
+    public function favoriteGame(Game $game) {
+        auth()->user()->games()->syncWithoutDetaching([$game->id, ['type' => 'favorite']]);
+        return fractal()->item($game, new GameTransformer());
+    }
+
+    public function ownGame(Game $game) {
+        auth()->user()->games()->attach($game->id, ['type' => 'owned']);
+        dd('test');
+        return fractal()->item($game, new GameTransformer());
+    }
+
 }

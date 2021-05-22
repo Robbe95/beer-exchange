@@ -13,12 +13,16 @@ class GameVoteTransformer extends BaseTransformer
     protected $availableIncludes = [];
 
     public function __construct() {
-
     }
 
     public function transform(GameVote $resource) {
 
-        return [];
+        return [
+            'id' => $resource->id,
+            'created_at' => $resource->created_at->timestamp,
+            'updated_at' => $resource->updated_at->timestamp,
+
+        ];
     }
 
     public function includeGame(GameVote $resource) {

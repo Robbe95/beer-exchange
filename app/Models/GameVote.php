@@ -13,7 +13,6 @@ class GameVote extends Model
         'game_id',
         'user_id',
         'group_id',
-
         'chosen'
     ];
 

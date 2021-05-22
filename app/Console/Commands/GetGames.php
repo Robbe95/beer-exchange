@@ -125,7 +125,6 @@ class GetGames extends Command
                             'thumbnail' => $boardgameValues['thumbnail'],
                             'description' => $boardgameValues['description'],
                             'public' => 1
-
                         ]
                     );
 
@@ -150,6 +149,6 @@ class GetGames extends Command
             }
         }
         $bar->finish();
-
+        return 1;
     }
 }

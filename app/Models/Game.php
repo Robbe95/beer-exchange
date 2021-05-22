@@ -20,7 +20,12 @@ class Game extends Model
         'min_play_time',
         'max_play_time',
         'min_age',
-        'public'
+        'public',
+        'rating',
+        'users_rated',
+        'rank',
+        'average',
+        'bayes_average'
     ];
 
     public function setPublic() {

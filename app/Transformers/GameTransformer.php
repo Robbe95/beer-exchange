@@ -16,12 +16,18 @@ class GameTransformer extends BaseTransformer
     }
 
     public function transform(Game $resource) {
+        if($resource->image && substr($resource->image, 0, 7) === 'storage') {
+            $resource->image = env('APP_URL') .$resource->image;
+        }
+        if($resource->thumbnail && substr($resource->thumbnail, 0, 7) === 'storage') {
+            $resource->thumbnail = env('APP_URL') .$resource->thumbnail;
+        }
 
         $return = [
             'id' => $resource->id,
             'title' => $resource->title,
             'description' => $resource->description,
-            'image' => $resource->image,
+            'image' => $resource->image ?? null,
             'thumbnail' => $resource->thumbnail ?? null,
 
             'year_published' => $resource->year_published ?? null,
@@ -29,7 +35,12 @@ class GameTransformer extends BaseTransformer
             'max_players' => $resource->max_players ?? null,
             'min_play_time' => $resource->min_play_time ?? null,
             'max_play_time' => $resource->max_play_time ?? null,
-            'min_age' => $resource->min_age ?? null
+            'min_age' => $resource->min_age ?? null,
+            'rank' => $resource->rank ?? null,
+            'average' => $resource->average ?? null,
+            'bayes_average' => $resource->bayes_average ?? null,
+            'users_rated' => $resource->users_rated ?? null
+
 
 
         ];
